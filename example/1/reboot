@@ -1,0 +1,20 @@
+#!/bin/sh
+# Author: samba
+# Description: a script for reboot confirm
+
+echo "ATTENZIONE: vuoi veramente riavviare il sistema? [yes/NO]: "
+read resp
+
+if [ $resp = "Yes" ] || [ $resp = "yes" ] || [ $resp = "y" ];then 
+	echo "Inserire l'hostname per confermare il reboot: " 
+	read myhost
+	REALHOST=$(hostname)
+	if [ $myhost = $REALHOST ];then
+		echo "OK, faccio il reboot"
+		# reboot
+	fi
+else
+	echo "Ah, ecco mi sembrava strano..."
+fi
+
+exit 0

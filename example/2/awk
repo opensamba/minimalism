@@ -1,0 +1,10 @@
+
+# stampo la prima colonna
+awk '{ print $1 }'
+# stampo la seconda colonna
+awk '{ print $2 }'
+# stampo tutti i caratteri escludendo i numeri
+awk '/^[0-9]\+/{ for (i=2;i<NF;i++){ printf("%s ",$i)}}END{ printf("\n") }' FILE_1
+# stampo i caratteri finali di ogni riga
+awk '{ print $NF}'
+

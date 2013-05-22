@@ -1,0 +1,11 @@
+# tolgo i numeri 
+cat FILE  | sed 's/[0-9]\. //'
+
+# metto la parola BAU a fine riga
+cat FILE  | sed 's/$/BAU/'
+
+# sostituisco pippo con samba
+cat FILE  | sed 's/pippo/samba/'
+
+# metto tutto in maiuscolo
+cat FILE  | sed 's/\(.*\)/\U\1/'

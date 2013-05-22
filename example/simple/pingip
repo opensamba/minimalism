@@ -1,0 +1,6 @@
+#/bin/bash
+#ping 193.70.192.25
+#ping 209.85.135.103 # google
+#ping 130.192.3.21 #polito
+#ping 212.216.112.112 #dns.tin.it
+ping 4.2.2.2

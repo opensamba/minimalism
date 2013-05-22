@@ -1,0 +1,24 @@
+#!/bin/bash 
+# samba was here
+
+echo "Facciamo un bel backup della tua home ? [Y/n]:"
+read a
+[ "$a" = "N" -o "$a" = "n"  ] && echo "ok, esco" && exit 0
+
+echo "copiare tutta la cartella home ? [Y/n]: "
+read a
+if [ "$a" = "N" -o "$a" = "n"  ];then 
+       echo "Inserire directory sorgente: "
+       read FROM_DIR
+       [ ! -d $FROM_DIR ] && echo "Questa directory non esiste!" && exit 1
+       echo "Inserire directory destinazione:"
+       read TO_DIR
+       [ ! -d $TO_DIR ] && echo "Questa dir non esiste!" && exit 1
+fi
+
+echo "eseguo il backup da $FROM_DIR a $TO_DIR:"
+
+rsync -av $FROM_DIR $TO_DIR
+
+exit 0
+

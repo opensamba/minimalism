@@ -1,0 +1,16 @@
+#!/bin/bash
+i=0
+while true; do 
+	[ $i -eq 0 ] && printf "\n%5s|%5s|%5s\n" "GW" "IP" "DNS"
+	ping -c 1 $(route -n | tail -1 | awk '{print $2}') 2>&1 > /dev/null
+	[ $? -eq 0 ] && printf "%5d" 1 ||  printf "%5d" 0
+	ping -c 1 4.2.2.2 2>&1 > /dev/null
+	[ $? -eq 0 ] && printf "%5d" 1 ||  printf "%5d" 0
+	ping -c 1 www.google.com  2>&1 > /dev/null
+	[ $? -eq 0 ] && printf "%5d" 1 ||  printf "%5d" 0
+	printf "\n"
+	i=$( echo "$i +1" | bc )
+	[ $i -eq 10 ] && i=0
+done
+
+exit

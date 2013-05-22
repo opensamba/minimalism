@@ -1,0 +1,73 @@
+#!/bin/bash
+# License:	GPLv3
+# Description: 	Random wallpaper change for GNOME Desktop
+# 
+DIR="$HOME/.wallpaper"
+DATA=$(date "+%F %T")
+TIME="5m"
+CMD="gconftool-2 --set --type string  /desktop/gnome/background/picture_filename "
+gconftool-2 --set --type string  /desktop/gnome/background/picture_option "scaled" # Configuro lo sfondo in scaled mode
+LOGFILE="$HOME/.gbbrandom"
+
+# Carico le script impostando le variabili  per ogni opzione
+for i in $* ; do   
+	case $1 in 
+		-d|--dir)
+			shift; 
+			DIR="$HOME/$1"; 
+			shift;
+		;;
+		-s)	
+			shift; 
+			DIR=$(zenity --list \
+			--radiolist \
+			--text "Where?" \
+			--title "Destination" \
+			--column "Pick" \
+			--column "Destination" TRUE "$HOME/.wallpaper/" FALSE "$HOME/.she")
+		;;
+		-t|--time)	
+			shift; 
+			TIME="$1"; 
+			shift;
+		;;
+		-c|--command)	
+			shift; 
+			CMD="$1"; 
+			shift;
+		;;
+		-h|--help) 
+			echo -e "$0 use 
+			\n-d\tSpecify the directory in your home \
+			\n-t\tSpecify the timer to change wallpaper \
+			\n-c\tSpecify the command used to change wallpaper \
+			\n-h\tPrint this help. \
+			\n-q\tQuit the program."; 
+		exit 1;		
+		;;
+#		*) echo "error: $* bad argument."; shift;
+#		;;
+	esac
+done
+
+NUM=$(ls -l $DIR/ | wc -l )
+echo from: $DIR
+echo every: $TIME
+echo exec: $CMD
+
+echo "files in : $DIR" > $LOGFILE
+echo "ogni $TIME" >> $LOGFILE
+echo "data: $DATA" >> $LOGFILE
+
+while true;do
+	j=0;
+	RAN=$(($RANDOM % $NUM)) 		# Genero un numero Random
+	for i in $(find $DIR/ -type f); do 	# Carico la lista dei wallpaper 
+		if [ $j == $RAN ] && [ -z  "$(grep $(basename $i) $LOGFILE)" ];then  # Se j=RANDOM e wallpaper nuovo
+			echo "$i" | tee -a $LOGFILE # wallpaper name in logfile
+			$CMD "$i"		    # Cambio il wallpaper
+			sleep $TIME   		    # Dormo per $TIME minuti
+		fi
+		((j=j+1));			    # Incremento j
+	done
+done

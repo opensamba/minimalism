@@ -1,0 +1,7 @@
+#/bin/bash
+# Author: samba
+# Description: check if network is available bypass the DNS server
+ 
+ping 8.8.8.8 #google dns
+#ping 130.192.3.21 #polito
+#ping 212.216.112.112 #dns.tin.it

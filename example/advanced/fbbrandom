@@ -1,0 +1,56 @@
+#!/bin/bash
+# samba was here
+DIR="$HOME/.wallpaper"
+TIME="5m"
+CMD="fbsetbg -a "
+MYPID=$$
+gconftool-2 --set --type string  /desktop/gnome/background/picture_option "scaled"
+FILE="$HOME/.gbbrandom"
+for i in $* ; do
+	case $1 in 
+		-d|-dir)	shift; DIR="$HOME/$1"; shift;
+		;;
+		-s|-show)		shift; DIR=$(zenity --list --radiolist --text "Where?" --title "Destination" --column "Pick" --column "Destination" TRUE "$HOME/Immagini/wall" FALSE "$HOME/.she" FALSE "$HOME/.screenlets/WallpaperChanger/images/background/original")
+		;;
+		-t|-time)	shift; TIME="$1"; shift;
+		;;
+		-c|-command)	shift; CMD="$1"; shift;
+		;;
+		-q|-quit)
+				kill -9 $MYPID	;
+				exit 0
+		;;
+		-h|-help) 
+			echo -e "$0 use 
+			\n-dir\tSpecify the directory in your home \
+			\n-time\tSpecify the timer to change wallpaper \
+			\n-command\tSpecify the command used to change wallpaper \
+			\n-help\tPrint this help. \
+			\n-quit\tQuit the program."; 
+		exit 1;		
+		;;
+#		*) echo "error: $* bad argument."; shift;
+#		;;
+	esac
+done
+
+NUM=$(ls -l $DIR/ | wc -l );
+echo from: $DIR
+echo every: $TIME
+echo exec: $CMD
+
+echo "files in : $DIR" > $FILE
+echo "ogni $TIME" >> $FILE
+
+while true;do
+	j=0;
+	RAN=$(($RANDOM % $NUM)) ;
+	for i in $(find $DIR/ -type f); do 
+		if [ $j == $RAN ] && [ -z  "$(grep $(basename $i) $FILE)" ];then 
+			echo "$i" | tee -a $FILE;
+			$CMD "$i"
+			sleep $TIME   
+		fi
+		((j=j+1));
+	done
+done
